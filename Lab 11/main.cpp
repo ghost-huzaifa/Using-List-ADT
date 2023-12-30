@@ -1,5 +1,7 @@
 #include <iostream>
 #include <list>
+#include <iomanip>
+
 using namespace std;
 
 struct studentInfo
@@ -9,6 +11,7 @@ struct studentInfo
     int age = 18;
 };
 
+void showMenu();
 void addStudentInList(list<studentInfo>& argList);
 void printStudents   (list<studentInfo>& argList);
 
@@ -19,22 +22,23 @@ int main()
     bool exitFlag = 0;
     do
     {
-        char input;
-        cout << "Do you want to add a student? (Y/N) : ";
+        showMenu();
+
+        int input;
         cin >> input;
 
         switch (input)
         {
-        case 'Y':
-        case 'y':
+        case 1:
             addStudentInList(studentsList);
             break;
-        case 'N':
-        case 'n':
+        case 2:
+            printStudents(studentsList);
+            break;
+        case 3:
             exitFlag = 1;
             break;
         }
-
         if (!cin)                           //Bad input stream checking
         {
             cin.clear();
@@ -46,6 +50,13 @@ int main()
     return 0;
 }
 
+void showMenu()
+{
+    cout << "1. Add Student" << endl
+             << "2. Show All Students" << endl
+             << "3. Exit" << endl << endl
+             << "Enter Option :";
+}
 void addStudentInList(list<studentInfo>& argList)   //Function to add Student
 {
     studentInfo student;
@@ -72,3 +83,22 @@ void addStudentInList(list<studentInfo>& argList)   //Function to add Student
 }
 
 
+bool compare(const studentInfo& first, const studentInfo& second)     //Function to be passed to sorting function
+{
+    return first.rollNo < second.rollNo;
+}
+
+void printStudents(list<studentInfo>& argList)      //Function to print all students in ascending roll no order
+{
+    cout << endl << "Sorted Data of students :" << endl << endl;
+
+    argList.sort(compare);                          //Built-in list function for sorting
+
+    for (list<studentInfo> :: iterator studentIt = argList.begin() ; studentIt != argList.end(); studentIt++)
+    {
+        cout << "Name : " << setw(20) << (*studentIt).name
+             << setw(15) << "| Roll No : " << setw(20) << (*studentIt).rollNo
+             << setw(15) << "| Age : " << setw(3) << (*studentIt).age << endl;
+    }
+    cout << endl;
+}
